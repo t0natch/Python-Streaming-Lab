@@ -12,6 +12,8 @@ from queue import Queue
 
 class Consumer:
     def __init__(self, q):
+        self.q = q
+        self.running_total = 0.0
         """
         PARAMETERS:
         - q : the shared queue (simulated topic)
@@ -24,6 +26,14 @@ class Consumer:
         
 
     def start(self):
+        while True:
+            
+            event = self.q.get()
+            try:
+                print(f"Received event: {event}")
+                self.process(event)
+            finally:
+                self.q.task_done()
         """
         Main loop of the consumer.
 
@@ -35,6 +45,13 @@ class Consumer:
     
 
     def process(self, event):
+        time.sleep(0.1)
+        amount = float(event["amount"])
+        self.running_total += amount
+        print(
+            f"Processed transaction {event['transaction_id']} | "
+            f"amount: {amount:.2f} | total: {self.running_total:.2f}"
+        )
         """
         TODO:
         - Simulate some processing time using time.sleep().

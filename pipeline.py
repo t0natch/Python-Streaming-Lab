@@ -12,6 +12,16 @@ from producer import CSVProducer
 from consumer import Consumer
 
 def main():
+
+    # Create a shared queue
+    q = Queue()
+    producer = CSVProducer("transactions.csv", q, delay=1.0)
+    consumer = Consumer(q)
+    thread_producer = threading.Thread(target=producer.start)
+    thread_consumer = threading.Thread(target=consumer.start)
+    thread_producer.start()
+    thread_consumer.start()
+#Optionally join them so the program runs continuously
     """
     TODO:
     - Create the shared queue.
